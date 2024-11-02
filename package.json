@@ -7,13 +7,19 @@
     "dev": "node src/server.js",
     "format:test": "prettier . --check",
     "format:fix": "prettier . --write",
+    "eslint:test": "eslint .",
+    "eslint:fix": "eslint . --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Parvej <parvej.workarea@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "@types/eslint__js": "^8.42.3",
     "@types/node": "^22.8.6",
+    "eslint": "^9.14.0",
     "prettier": "3.3.3",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.12.2"
   }
 }
