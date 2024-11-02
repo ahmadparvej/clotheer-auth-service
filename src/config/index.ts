@@ -4,5 +4,6 @@ config();
 const { PORT } = process.env;
 
 export const Config = {
-  PORT: Number(PORT) || 3000,
+  PORT: Number(PORT),
+  NODE_ENV: process.env.NODE_ENV,
 };
