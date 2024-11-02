@@ -26,6 +26,12 @@
     "typescript-eslint": "^8.12.2"
   },
   "lint-staged": {
-    "*.ts": ["npm run format:fix", "npm run eslint:fix"]
+    "*.ts": [
+      "npm run format:fix",
+      "npm run eslint:fix"
+    ]
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
   }
 }
