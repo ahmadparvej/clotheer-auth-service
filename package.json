@@ -4,7 +4,7 @@
   "description": "The authentication server",
   "main": "server.js",
   "scripts": {
-    "dev": "node src/server.js",
+    "dev": "nodemon src/server.ts",
     "format:test": "prettier . --check",
     "format:fix": "prettier . --write",
     "eslint:test": "eslint .",
@@ -32,6 +32,9 @@
     ]
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "@types/express": "^5.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7"
   }
 }
