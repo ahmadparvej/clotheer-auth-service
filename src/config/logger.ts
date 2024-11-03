@@ -15,7 +15,7 @@ const logger = winston.createLogger({
         winston.format.json(),
         winston.format.prettyPrint(),
       ),
-      silent: Config.NODE_ENV === "development",
+      silent: Config.NODE_ENV === "production",
     }),
     new winston.transports.File({
       filename: "error.log",
@@ -26,7 +26,7 @@ const logger = winston.createLogger({
         winston.format.json(),
         winston.format.prettyPrint(),
       ),
-      silent: Config.NODE_ENV === "development",
+      silent: Config.NODE_ENV === "production",
     }),
     new winston.transports.Console({
       level: "info",
@@ -35,7 +35,7 @@ const logger = winston.createLogger({
         winston.format.json(),
         winston.format.prettyPrint(),
       ),
-      silent: Config.NODE_ENV === "development",
+      silent: Config.NODE_ENV === "production",
     }),
   ],
 });
