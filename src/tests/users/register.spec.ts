@@ -1,7 +1,24 @@
 import app from "./../../app";
 import request from "supertest";
+import { DataSource } from "typeorm";
+import { AppDataSource } from "./../../config/data-source";
+import { truncateTables } from "./../utils/index";
 
 describe("POST /auth/register", () => {
+  let connection: DataSource;
+  beforeAll(async () => {
+    connection = await AppDataSource.initialize();
+  });
+
+  beforeEach(async () => {
+    // database truncate
+    await truncateTables(connection);
+  });
+
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
   describe("Given all fields", () => {
     it("should return 200 status code", async () => {
       //Arrange
@@ -48,7 +65,13 @@ describe("POST /auth/register", () => {
       await request(app).post("/auth/register").send(userData);
 
       //Assert
-      // expect(response.body.message).toBe("OK");
+      const userRepository = connection.getRepository("User");
+      const user = await userRepository.find();
+      expect(user).toHaveLength(1);
+      expect(user[0].firstName).toBe("John");
+      expect(user[0].lastName).toBe("Doe");
+      expect(user[0].email).toBe("b8x0n@example.com");
+      expect(user[0].password).toBe("password");
     });
   });
   describe("Fiels are missing", () => {});
