@@ -73,6 +73,26 @@ describe("POST /auth/register", () => {
       expect(user[0].email).toBe("b8x0n@example.com");
       expect(user[0].password).toBe("password");
     });
+
+    it("should return an id of created user", async () => {
+      //Arrange
+      const userData = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "b8x0n@example.com",
+        password: "password",
+      };
+
+      //Act
+      await request(app).post("/auth/register").send(userData);
+
+      //Assert
+      const userRepository = connection.getRepository("User");
+      const user = await userRepository.findOneBy({
+        email: "b8x0n@example.com",
+      });
+      expect(user?.id).toBeDefined();
+    });
   });
   describe("Fiels are missing", () => {});
 });
