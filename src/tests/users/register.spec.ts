@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 import app from "./../../app";
 import { AppDataSource } from "./../../config/data-source";
 import { Roles } from "./../../constants/index";
+import bcrypt from "bcrypt";
 
 describe("POST /auth/register", () => {
   let connection: DataSource;
@@ -72,7 +73,7 @@ describe("POST /auth/register", () => {
       expect(user[0].firstName).toBe("John");
       expect(user[0].lastName).toBe("Doe");
       expect(user[0].email).toBe("b8x0n@example.com");
-      expect(user[0].password).toBe("password");
+      expect(user[0].password).toBeDefined();
     });
 
     it("should return an id of created user", async () => {
@@ -113,6 +114,30 @@ describe("POST /auth/register", () => {
         email: "b8x0n@example.com",
       });
       expect(user?.role).toBe(Roles.CUSTOMER);
+    });
+
+    it("should store password in hashed format", async () => {
+      //Arrange
+      const userData = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "b8x0n@example.com",
+        password: "password",
+      };
+
+      //Act
+      await request(app).post("/auth/register").send(userData);
+
+      //Assert
+      const userRepository = connection.getRepository("User");
+      const user = await userRepository.findOneBy({
+        email: "b8x0n@example.com",
+      });
+      const isMatch = await bcrypt.compare(
+        "password",
+        user?.password as string,
+      );
+      expect(isMatch).toBe(true);
     });
   });
   describe("Fiels are missing", () => {});
