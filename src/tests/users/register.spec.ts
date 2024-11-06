@@ -239,7 +239,7 @@ describe("POST /auth/register", () => {
       const userData = {
         firstName: "John",
         lastName: "Doe",
-        email: "b8x0n@example.com",
+        email: "b8x0nexample.com",
         password: "password",
       };
 
