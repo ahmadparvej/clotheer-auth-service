@@ -13,6 +13,7 @@ export default checkSchema({
   lastName: {
     errorMessage: "last name is required",
     notEmpty: true,
+    optional: true,
   },
   password: {
     errorMessage: "password is required",
