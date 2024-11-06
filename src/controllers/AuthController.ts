@@ -2,6 +2,7 @@ import { NextFunction, Response } from "express";
 import { RegisterUserRequest } from "./../types/index";
 import { UserService } from "./../services/UserService";
 import { Logger } from "winston";
+import { Roles } from "./../constants/index";
 
 export class AuthController {
   constructor(
@@ -25,6 +26,7 @@ export class AuthController {
         lastName,
         email,
         password,
+        role: Roles.CUSTOMER,
       });
       this.logger.info("user created successfully", { id: user.id });
       res.status(200).json({ id: user.id });

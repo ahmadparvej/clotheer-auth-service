@@ -1,8 +1,8 @@
-import app from "./../../app";
 import request from "supertest";
 import { DataSource } from "typeorm";
+import app from "./../../app";
 import { AppDataSource } from "./../../config/data-source";
-import { truncateTables } from "./../utils/index";
+import { Roles } from "./../../constants/index";
 
 describe("POST /auth/register", () => {
   let connection: DataSource;
@@ -12,7 +12,8 @@ describe("POST /auth/register", () => {
 
   beforeEach(async () => {
     // database truncate
-    await truncateTables(connection);
+    await connection.dropDatabase();
+    await connection.synchronize();
   });
 
   afterAll(async () => {
@@ -92,6 +93,26 @@ describe("POST /auth/register", () => {
         email: "b8x0n@example.com",
       });
       expect(user?.id).toBeDefined();
+    });
+
+    it("should assign a customer role", async () => {
+      //Arrange
+      const userData = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "b8x0n@example.com",
+        password: "password",
+      };
+
+      //Act
+      await request(app).post("/auth/register").send(userData);
+
+      //Assert
+      const userRepository = connection.getRepository("User");
+      const user = await userRepository.findOneBy({
+        email: "b8x0n@example.com",
+      });
+      expect(user?.role).toBe(Roles.CUSTOMER);
     });
   });
   describe("Fiels are missing", () => {});
