@@ -252,5 +252,22 @@ describe("POST /auth/register", () => {
       expect(response.statusCode).toBe(400);
       expect(users).toHaveLength(0);
     });
+    it("should check if password is valid (less than 8 characters)", async () => {
+      //Arrange
+      const userData = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "b8x0n@example.com",
+        password: "pass",
+      };
+
+      //Act
+      const response = await request(app).post("/auth/register").send(userData);
+      const userRepository = connection.getRepository("User");
+      const users = await userRepository.find();
+      //Assert
+      expect(response.statusCode).toBe(400);
+      expect(users).toHaveLength(0);
+    });
   });
 });
