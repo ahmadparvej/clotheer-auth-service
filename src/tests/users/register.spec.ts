@@ -265,8 +265,11 @@ describe("POST /auth/register", () => {
       const response = await request(app).post("/auth/register").send(userData);
       const userRepository = connection.getRepository("User");
       const users = await userRepository.find();
+
       //Assert
       expect(response.statusCode).toBe(400);
+      expect(response.body).toHaveProperty("errors");
+      expect(response.body).toHaveProperty("errors[0].msg");
       expect(users).toHaveLength(0);
     });
   });
