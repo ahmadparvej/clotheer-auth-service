@@ -5,7 +5,13 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["node_modules", "dist", "eslint.config.mjs", "jest.config.js"],
+    ignores: [
+      "node_modules",
+      "dist",
+      "eslint.config.mjs",
+      "jest.config.js",
+      "scripts/**/*.mjs",
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
