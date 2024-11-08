@@ -5,6 +5,7 @@ import { AppDataSource } from "./../../config/data-source";
 import { Roles } from "./../../constants/index";
 import bcrypt from "bcrypt";
 import { isJwt } from "../utils";
+import { RefreshToken } from "./../../entity/RefreshToken";
 
 describe("POST /auth/register", () => {
   let connection: DataSource;
@@ -195,6 +196,32 @@ describe("POST /auth/register", () => {
 
       expect(isJwt(accessToken)).toBeTruthy();
       expect(isJwt(refreshToken)).toBeTruthy();
+    });
+
+    it("should restore the refresh token in database", async () => {
+      //Arrange
+      const userData = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "b8x0n@example.com",
+        password: "password",
+      };
+
+      //Act
+      const response = await request(app).post("/auth/register").send(userData);
+
+      //Assert
+      const refreshTokenRepository = connection.getRepository(RefreshToken);
+      // const refreshTokens = await refreshRepository.find();
+
+      const tokens = await refreshTokenRepository
+        .createQueryBuilder("refreshToken")
+        .where("refreshToken.userId = :userId", {
+          userId: (response.body as Record<string, string>).id,
+        })
+        .getMany();
+
+      expect(tokens).toHaveLength(1);
     });
   });
   describe("Fiels are missing", () => {
