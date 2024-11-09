@@ -137,9 +137,13 @@ export class AuthController {
     }
   }
 
-  async self(req: AuthRequest, res: Response) {
-    const user = await this.userService.findById(Number(req.auth.sub));
-
-    res.status(200).send({ ...user, password: undefined });
+  async self(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const user = await this.userService.findById(Number(req.auth.sub));
+      res.json({ ...user, password: undefined });
+    } catch (error) {
+      next(error);
+      return;
+    }
   }
 }
