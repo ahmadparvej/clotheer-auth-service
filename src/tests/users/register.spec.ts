@@ -224,7 +224,7 @@ describe("POST /auth/register", () => {
       expect(tokens).toHaveLength(1);
     });
   });
-  describe("Fiels are missing", () => {
+  describe("Fields are missing", () => {
     it("should return 400 status code if email is missing", async () => {
       //Arrange
       const userData = {
