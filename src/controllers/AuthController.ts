@@ -5,7 +5,7 @@ import { Logger } from "winston";
 import { Roles } from "./../constants/index";
 import { TokenService } from "./../services/TokenService";
 import { UserService } from "./../services/UserService";
-import { RegisterUserRequest } from "./../types/index";
+import { RegisterUserRequest, AuthRequest } from "./../types/index";
 export class AuthController {
   constructor(
     private userService: UserService,
@@ -135,5 +135,11 @@ export class AuthController {
       next(error);
       return;
     }
+  }
+
+  async self(req: AuthRequest, res: Response) {
+    const user = await this.userService.findById(Number(req.auth.sub));
+
+    res.status(200).send(user);
   }
 }
