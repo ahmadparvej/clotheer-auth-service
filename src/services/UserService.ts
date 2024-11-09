@@ -34,4 +34,18 @@ export class UserService {
       throw error;
     }
   }
+
+  async login({ email, password }: { email: string; password: string }) {
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) {
+      const error = createHttpError(400, "user not found");
+      throw error;
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      const error = createHttpError(400, "invalid password");
+      throw error;
+    }
+    return user;
+  }
 }

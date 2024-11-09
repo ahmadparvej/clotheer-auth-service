@@ -74,4 +74,64 @@ export class AuthController {
       return;
     }
   }
+
+  async login(req: RegisterUserRequest, res: Response, next: NextFunction) {
+    // validation
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      res.status(400).json({ errors: result.array() });
+      return;
+    }
+
+    const { email, password } = req.body;
+
+    this.logger.debug("logging in user", {
+      email,
+      password: "*****",
+    });
+
+    /** Check if username (email) exists in database
+     * compare password
+     * generate access token
+     * add access token to cookie
+     * return the response id
+     */
+    try {
+      const user = await this.userService.login({ email, password });
+
+      const payload: JwtPayload = {
+        sub: String(user.id),
+        role: user.role,
+      };
+
+      const accessToken = this.tokenService.generateAccessToken(payload);
+
+      // Persist the refresh token in database
+      const newRefreshToken = await this.tokenService.persistRefreshToken(user);
+
+      const refreshToken = this.tokenService.generateRefreshToken({
+        ...payload,
+        id: newRefreshToken.id,
+      });
+
+      res.cookie("access_token", accessToken, {
+        domain: "localhost",
+        sameSite: "strict",
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+      });
+      res.cookie("refresh_token", refreshToken, {
+        domain: "localhost",
+        sameSite: "strict",
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+        httpOnly: true,
+      });
+
+      res.status(200).send({ userId: user.id });
+      return;
+    } catch (error) {
+      next(error);
+      return;
+    }
+  }
 }
