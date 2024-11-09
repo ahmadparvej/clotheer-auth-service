@@ -99,6 +99,8 @@ export class AuthController {
     try {
       const user = await this.userService.login({ email, password });
 
+      this.logger.info("user logged in successfully", { id: user.id });
+
       const payload: JwtPayload = {
         sub: String(user.id),
         role: user.role,
