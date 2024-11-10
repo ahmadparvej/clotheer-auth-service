@@ -1,4 +1,9 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, {
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+} from "express";
 import { AuthController } from "./../controllers/AuthController";
 import { UserService } from "./../services/UserService";
 import { AppDataSource } from "./../config/data-source";
@@ -39,7 +44,7 @@ authRouter.post(
 
 authRouter.get(
   "/self",
-  authenticate,
+  authenticate as RequestHandler,
   (req: Request, res: Response, next: NextFunction) =>
     authController.self(req as AuthRequest, res, next),
 );
