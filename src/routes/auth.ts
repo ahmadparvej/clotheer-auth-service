@@ -16,6 +16,7 @@ import loginValidator from "../validators/login-validator";
 import authenticate from "../middlewares/authenticate";
 import { AuthRequest } from "./../types/index";
 import validateRefreshToken from "../middlewares/validateRefreshToken";
+import parseRefreshToken from "../middlewares/parseRefreshToken";
 
 const authRouter = express.Router();
 
@@ -55,6 +56,14 @@ authRouter.post(
   validateRefreshToken as RequestHandler,
   (req: Request, res: Response, next: NextFunction) =>
     authController.refresh(req as AuthRequest, res, next),
+);
+
+authRouter.post(
+  "/logout",
+  authenticate as RequestHandler,
+  parseRefreshToken as RequestHandler,
+  (req: Request, res: Response, next: NextFunction) =>
+    authController.logout(req as AuthRequest, res, next),
 );
 
 export default authRouter;
