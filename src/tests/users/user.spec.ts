@@ -36,14 +36,14 @@ describe("GET /auth/self", () => {
       //Act
 
       // Generate token
-      const accessToken = jwks.token({
+      const access_token = jwks.token({
         sub: "1",
         role: Roles.CUSTOMER,
       });
 
       const response = await request(app)
         .get("/auth/self")
-        .set("Cookie", [`accessToken=${accessToken};`])
+        .set("Cookie", [`access_token=${access_token};`])
         .send();
 
       // Assert
@@ -67,7 +67,7 @@ describe("GET /auth/self", () => {
       });
       // Generate token
 
-      const accessToken = jwks.token({
+      const access_token = jwks.token({
         sub: String(data.id),
         role: data.role,
       });
@@ -75,7 +75,7 @@ describe("GET /auth/self", () => {
       // Add token to cookie
       const response = await request(app)
         .get("/auth/self")
-        .set("Cookie", [`accessToken=${accessToken};`])
+        .set("Cookie", [`access_token=${access_token};`])
         .send();
 
       // Assert
@@ -100,7 +100,7 @@ describe("GET /auth/self", () => {
       });
       // Generate token
 
-      const accessToken = jwks.token({
+      const access_token = jwks.token({
         sub: String(data.id),
         role: data.role,
       });
@@ -108,7 +108,7 @@ describe("GET /auth/self", () => {
       // Add token to cookie
       const response = await request(app)
         .get("/auth/self")
-        .set("Cookie", [`accessToken=${accessToken};`])
+        .set("Cookie", [`access_token=${access_token};`])
         .send();
 
       // Assert
