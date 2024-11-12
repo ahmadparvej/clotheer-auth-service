@@ -1,4 +1,9 @@
-import express, { RequestHandler } from "express";
+import express, {
+  RequestHandler,
+  Request,
+  Response,
+  NextFunction,
+} from "express";
 import { TenantController } from "./../controllers/TenantController";
 import { TenantService } from "../services/TenantService";
 import { AppDataSource } from "./../config/data-source";
@@ -7,6 +12,7 @@ import logger from "../config/logger";
 import authenticate from "../middlewares/authenticate";
 import { canAccess } from "../middlewares/canAccess";
 import { Roles } from "./../constants/index";
+import tenantValidator from "../validators/tenant-validator";
 
 const tenantsRouter = express.Router();
 
@@ -18,9 +24,11 @@ const tenantController = new TenantController(tenantService, logger);
 
 tenantsRouter.post(
   "/",
+  tenantValidator,
   authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
-  (req, res, next) => tenantController.create(req, res, next),
+  (req: Request, res: Response, next: NextFunction) =>
+    tenantController.create(req, res, next),
 );
 
 export default tenantsRouter;
