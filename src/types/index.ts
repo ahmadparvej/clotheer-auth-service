@@ -20,8 +20,17 @@ export interface AuthRequest extends Request {
   };
 }
 
+export interface TenantRequest extends Request {
+  body: ITenant;
+}
+
 export type AuthCookie = { access_token: string; refresh_token: string };
 
 export interface IRefreshToken {
   id: number;
+}
+
+export interface ITenant {
+  name: string;
+  address: string;
 }
