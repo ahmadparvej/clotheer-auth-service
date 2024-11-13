@@ -31,4 +31,12 @@ tenantsRouter.post(
     tenantController.create(req, res, next),
 );
 
+tenantsRouter.get(
+  "/",
+  authenticate as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  (req: Request, res: Response, next: NextFunction) =>
+    tenantController.get(req, res, next),
+);
+
 export default tenantsRouter;

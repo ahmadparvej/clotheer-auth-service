@@ -32,4 +32,13 @@ export class TenantController {
       next(error);
     }
   }
+
+  async get(req: TenantRequest, res: Response, next: NextFunction) {
+    try {
+      const tenants = await this.tenantService.get();
+      res.status(200).json(tenants);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
