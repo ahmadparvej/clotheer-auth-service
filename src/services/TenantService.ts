@@ -12,4 +12,8 @@ export class TenantService {
   async get() {
     return await this.tenantRepository.find();
   }
+
+  async getOne(id: number) {
+    return await this.tenantRepository.findOneBy({ id });
+  }
 }

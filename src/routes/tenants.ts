@@ -39,4 +39,12 @@ tenantsRouter.get(
     tenantController.get(req, res, next),
 );
 
+tenantsRouter.get(
+  "/:id",
+  authenticate as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  (req: Request, res: Response, next: NextFunction) =>
+    tenantController.getOne(req, res, next),
+);
+
 export default tenantsRouter;

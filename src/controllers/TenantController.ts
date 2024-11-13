@@ -41,4 +41,13 @@ export class TenantController {
       next(error);
     }
   }
+
+  async getOne(req: TenantRequest, res: Response, next: NextFunction) {
+    try {
+      const tenant = await this.tenantService.getOne(Number(req.params.id));
+      res.status(200).json(tenant);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

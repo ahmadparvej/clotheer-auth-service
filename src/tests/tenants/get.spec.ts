@@ -42,5 +42,18 @@ describe("GET /tenants", () => {
       expect(response.statusCode).toBe(200);
       expect(response.body).toHaveLength(2);
     });
+
+    it("should return tenant with id 1", async () => {
+      const tenantRepository = connection.getRepository(Tenant);
+      await tenantRepository.save({ name: "Tenant 1", address: "Address 1" });
+      await tenantRepository.save({ name: "Tenant 2", address: "Address 2" });
+
+      const response = await request(app)
+        .get("/tenants/1")
+        .set("Cookie", [`access_token=${adminToken};`]);
+
+      expect(response.statusCode).toBe(200);
+      expect((response.body as Record<string, string>).id).toBe(1);
+    });
   });
 });
