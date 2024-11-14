@@ -47,4 +47,13 @@ tenantsRouter.get(
     tenantController.getOne(req, res, next),
 );
 
+tenantsRouter.put(
+  "/:id",
+  tenantValidator,
+  authenticate as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  (req: Request, res: Response, next: NextFunction) =>
+    tenantController.update(req, res, next),
+);
+
 export default tenantsRouter;

@@ -50,4 +50,16 @@ export class TenantController {
       next(error);
     }
   }
+
+  async update(req: TenantRequest, res: Response, next: NextFunction) {
+    try {
+      const tenant = await this.tenantService.update(
+        Number(req.params.id),
+        req.body,
+      );
+      res.status(200).json(tenant);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
