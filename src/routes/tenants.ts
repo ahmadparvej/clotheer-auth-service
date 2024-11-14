@@ -56,4 +56,12 @@ tenantsRouter.put(
     tenantController.update(req, res, next),
 );
 
+tenantsRouter.delete(
+  "/:id",
+  authenticate as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  (req: Request, res: Response, next: NextFunction) =>
+    tenantController.delete(req, res, next),
+);
+
 export default tenantsRouter;

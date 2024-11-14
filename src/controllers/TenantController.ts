@@ -62,4 +62,13 @@ export class TenantController {
       next(error);
     }
   }
+
+  async delete(req: TenantRequest, res: Response, next: NextFunction) {
+    try {
+      await this.tenantService.delete(Number(req.params.id));
+      res.status(200).json({ message: "deleted" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
