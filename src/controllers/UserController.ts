@@ -1,12 +1,20 @@
 import { NextFunction, Response } from "express";
 import { CreateUserRequest } from "../types";
 import { UserService } from "./../services/UserService";
+import { Roles } from "./../constants/index";
+import createHttpError from "http-errors";
 
 export class UserController {
   constructor(private userService: UserService) {}
 
   async create(req: CreateUserRequest, res: Response, next: NextFunction) {
     const { firstName, lastName, email, password, tenantId, role } = req.body;
+
+    if (role !== Roles.MANAGER) {
+      const error = createHttpError(403, "You don't have enough permissions");
+      next(error);
+      return;
+    }
 
     try {
       const user = await this.userService.create({

@@ -82,6 +82,22 @@ describe("Post /users", () => {
       expect(users[0].role).toBe(Roles.MANAGER);
     });
 
-    // it("should return 403 if non-admin user tries to create user")
+    it("should return 403 if non-admin user tries to create user", async () => {
+      const userData = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "b8x0n@example.com",
+        password: "password",
+        tenantId: tenantData.id,
+        role: Roles.CUSTOMER,
+      };
+
+      const response = await request(app)
+        .post("/users")
+        .set("Cookie", [`access_token=${adminToken};`])
+        .send(userData);
+
+      expect(response.statusCode).toBe(403);
+    });
   });
 });
