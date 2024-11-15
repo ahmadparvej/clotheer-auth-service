@@ -48,4 +48,13 @@ export class UserController {
       next(error);
     }
   }
+
+  async delete(req: CreateUserRequest, res: Response, next: NextFunction) {
+    try {
+      await this.userService.delete(Number(req.params.id));
+      res.status(200).json({ message: "deleted" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
