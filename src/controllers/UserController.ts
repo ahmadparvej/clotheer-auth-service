@@ -39,4 +39,13 @@ export class UserController {
       next(error);
     }
   }
+
+  async getOne(req: CreateUserRequest, res: Response, next: NextFunction) {
+    try {
+      const user = await this.userService.findById(Number(req.params.id));
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

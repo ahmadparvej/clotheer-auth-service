@@ -74,5 +74,31 @@ describe("GET /users", () => {
       expect(response.statusCode).toBe(200);
       expect(response.body).toHaveLength(2);
     });
+
+    it("should return user by id", async () => {
+      //Arrange
+      const userData1 = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "b8x0n@example.com",
+        password: "password",
+        tenantId: tenantData.id,
+        role: Roles.MANAGER,
+      };
+
+      await request(app)
+        .post("/users")
+        .set("Cookie", [`access_token=${adminToken};`])
+        .send(userData1);
+
+      //Act
+      const response = await request(app)
+        .get("/users/1")
+        .set("Cookie", [`access_token=${adminToken};`]);
+
+      // Assert
+      expect(response.statusCode).toBe(200);
+      expect((response.body as Record<string, string>).id).toBe(1);
+    });
   });
 });
