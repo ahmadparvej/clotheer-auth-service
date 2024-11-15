@@ -1,13 +1,12 @@
-import { Response, NextFunction } from "express";
+import { NextFunction, Response } from "express";
+import { CreateUserRequest } from "../types";
 import { UserService } from "./../services/UserService";
-import { RegisterUserRequest } from "../types";
-import { Roles } from "./../constants/index";
 
 export class UserController {
   constructor(private userService: UserService) {}
 
-  async create(req: RegisterUserRequest, res: Response, next: NextFunction) {
-    const { firstName, lastName, email, password } = req.body;
+  async create(req: CreateUserRequest, res: Response, next: NextFunction) {
+    const { firstName, lastName, email, password, tenantId, role } = req.body;
 
     try {
       const user = await this.userService.create({
@@ -15,7 +14,8 @@ export class UserController {
         lastName,
         email,
         password,
-        role: Roles.MANAGER,
+        tenantId,
+        role,
       });
       res.status(201).json({ id: user.id });
     } catch (error) {

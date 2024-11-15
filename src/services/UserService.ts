@@ -7,7 +7,14 @@ import bcrypt from "bcrypt";
 export class UserService {
   constructor(private userRepository: Repository<User>) {}
 
-  async create({ firstName, lastName, email, password, role }: UserData) {
+  async create({
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
+    tenantId,
+  }: UserData) {
     //Check if user already exists
     const user = await this.userRepository.findOneBy({ email });
     if (user) {
@@ -19,15 +26,21 @@ export class UserService {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    const payload: UserData = {
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      role,
+    };
+
+    if (tenantId) {
+      payload["tenantId"] = tenantId;
+    }
+
     // Save user to database
     try {
-      return await this.userRepository.save({
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-        role: role,
-      });
+      return await this.userRepository.save(payload);
     } catch {
       const error = createHttpError(500, "failed to create user in database");
       throw error;

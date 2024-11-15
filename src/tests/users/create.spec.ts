@@ -5,11 +5,15 @@ import request from "supertest";
 import createJWKSMock from "mock-jwks";
 import { User } from "./../../entity/User";
 import { Roles } from "./../../constants/index";
+import { createTenant } from "./../utils/index";
+import { Tenant } from "./../../entity/Tenant";
+import { ITenant } from "./../../types/index";
 
 describe("Post /users", () => {
   let connection: DataSource;
   let jwks: ReturnType<typeof createJWKSMock>;
   let adminToken = "";
+  let tenantData: ITenant;
 
   beforeAll(async () => {
     jwks = createJWKSMock("http://localhost:5501");
@@ -19,6 +23,7 @@ describe("Post /users", () => {
   beforeEach(async () => {
     jwks.start();
     adminToken = jwks.token({ sub: "1", role: Roles.ADMIN });
+    tenantData = await createTenant(connection.getRepository(Tenant));
     // database truncate
     await connection.dropDatabase();
     await connection.synchronize();
@@ -38,7 +43,8 @@ describe("Post /users", () => {
         lastName: "Doe",
         email: "b8x0n@example.com",
         password: "password",
-        tenantId: 1,
+        tenantId: tenantData.id,
+        role: Roles.MANAGER,
       };
 
       //Act
@@ -60,7 +66,8 @@ describe("Post /users", () => {
         lastName: "Doe",
         email: "b8x0n@example.com",
         password: "password",
-        tenantId: 1,
+        tenantId: tenantData.id,
+        role: Roles.MANAGER,
       };
 
       const response = await request(app)
