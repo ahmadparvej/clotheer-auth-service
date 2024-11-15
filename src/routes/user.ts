@@ -22,4 +22,11 @@ userRouter.post(
   (req, res, next) => userController.create(req, res, next),
 );
 
+userRouter.get(
+  "/",
+  authenticate as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  (req, res, next) => userController.getAll(req, res, next),
+);
+
 export default userRouter;

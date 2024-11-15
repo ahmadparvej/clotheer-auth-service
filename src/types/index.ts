@@ -18,7 +18,7 @@ export interface CreateUser {
   lastName: string;
   email: string;
   password: string;
-  role: string;
+  role?: string;
   tenantId: number;
 }
 

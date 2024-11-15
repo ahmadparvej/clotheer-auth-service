@@ -66,4 +66,8 @@ export class UserService {
       where: { id },
     });
   }
+
+  async getAll() {
+    return await this.userRepository.find();
+  }
 }
