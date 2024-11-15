@@ -43,4 +43,11 @@ userRouter.delete(
   (req, res, next) => userController.delete(req, res, next),
 );
 
+userRouter.put(
+  "/:id",
+  authenticate as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  (req, res, next) => userController.update(req, res, next),
+);
+
 export default userRouter;

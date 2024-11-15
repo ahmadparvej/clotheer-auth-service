@@ -3,6 +3,7 @@ import { CreateUserRequest } from "../types";
 import { UserService } from "./../services/UserService";
 import { Roles } from "./../constants/index";
 import createHttpError from "http-errors";
+import { validationResult } from "express-validator";
 
 export class UserController {
   constructor(private userService: UserService) {}
@@ -53,6 +54,24 @@ export class UserController {
     try {
       await this.userService.delete(Number(req.params.id));
       res.status(200).json({ message: "deleted" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(req: CreateUserRequest, res: Response, next: NextFunction) {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      res.status(400).json({ errors: result.array() });
+      return;
+    }
+
+    try {
+      const user = await this.userService.update(
+        Number(req.params.id),
+        req.body,
+      );
+      res.status(200).json(user);
     } catch (error) {
       next(error);
     }
