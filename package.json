@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=dev nodemon src/server.ts",
+    "build": "tsc",
     "format:test": "prettier . --check",
     "format:fix": "prettier . --write",
     "format": "npm run format:test && npm run format:fix",
