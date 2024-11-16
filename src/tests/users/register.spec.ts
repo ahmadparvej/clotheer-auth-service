@@ -75,7 +75,6 @@ describe("POST /auth/register", () => {
       expect(user[0].firstName).toBe("John");
       expect(user[0].lastName).toBe("Doe");
       expect(user[0].email).toBe("b8x0n@example.com");
-      expect(user[0].password).toBeDefined();
     });
 
     it("should return an id of created user", async () => {
@@ -132,8 +131,9 @@ describe("POST /auth/register", () => {
 
       //Assert
       const userRepository = connection.getRepository("User");
-      const user = await userRepository.findOneBy({
-        email: "b8x0n@example.com",
+      const user = await userRepository.findOne({
+        where: { email: "b8x0n@example.com" },
+        select: ["password"],
       });
       const isMatch = await bcrypt.compare(
         "password",

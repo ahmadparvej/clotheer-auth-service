@@ -48,7 +48,10 @@ export class UserService {
   }
 
   async login({ email, password }: { email: string; password: string }) {
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ["id", "firstName", "lastName", "email", "role", "password"],
+    });
     if (!user) {
       const error = createHttpError(401, "user not found");
       throw error;
