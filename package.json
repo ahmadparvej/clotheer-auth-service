@@ -11,7 +11,7 @@
     "format": "npm run format:test && npm run format:fix",
     "eslint:test": "eslint .",
     "eslint:fix": "eslint . --fix",
-    "eslint": "npm run eslint:test && npm run eslint:fix",
+    "lint": "npm run eslint:test && npm run eslint:fix",
     "fix": "npm run format:fix && npm run eslint:fix",
     "test": "jest --no-cache --coverage --all --runInBand",
     "test:watch": "jest --watch --runInBand",
