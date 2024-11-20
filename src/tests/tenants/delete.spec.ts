@@ -15,7 +15,7 @@ describe("DELETE /tenants", () => {
   beforeAll(async () => {
     jwks = createJWKSMock("http://localhost:5501");
     connection = await AppDataSource.initialize();
-  });
+  }, 10000);
 
   beforeEach(async () => {
     jwks.start();
@@ -23,12 +23,12 @@ describe("DELETE /tenants", () => {
     // database truncate
     await connection.dropDatabase();
     await connection.synchronize();
-  });
+  }, 10000);
 
   afterAll(async () => {
     jwks.stop();
     await connection.destroy();
-  });
+  }, 10000);
 
   describe("Given all fields", () => {
     it("should delete tenant with id 1", async () => {
