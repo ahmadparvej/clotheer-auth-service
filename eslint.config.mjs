@@ -13,6 +13,7 @@ export default tseslint.config(
       "scripts/**/*.mjs",
       "*.spec.ts",
       "*/tests/**/*",
+      "coverage/**",
     ],
   },
   eslint.configs.recommended,
