@@ -7,17 +7,17 @@ describe("POST /auth/login", () => {
   let connection: DataSource;
   beforeAll(async () => {
     connection = await AppDataSource.initialize();
-  });
+  }, 10000);
 
   beforeEach(async () => {
     // database truncate
     await connection.dropDatabase();
     await connection.synchronize();
-  });
+  }, 10000);
 
   afterAll(async () => {
     await connection.destroy();
-  });
+  }, 10000);
 
   describe("given all fields", () => {
     it("should return 200 status code", async () => {
