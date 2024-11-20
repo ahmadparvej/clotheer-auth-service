@@ -1,7 +1,7 @@
+import request from "supertest";
 import { DataSource } from "typeorm";
 import { AppDataSource } from "./../../config/data-source";
 import app from "./../../app";
-import request from "supertest";
 import { Tenant } from "./../../entity/Tenant";
 import createJWKSMock from "mock-jwks";
 import { Roles } from "./../../constants/index";
