@@ -3,7 +3,7 @@ import { ITenant } from "../types";
 import { Repository } from "typeorm";
 
 export class TenantService {
-  constructor(private tenantRepository: Repository<Tenant>) {}
+  constructor(readonly tenantRepository: Repository<Tenant>) {}
 
   async create(tenantData: ITenant) {
     return await this.tenantRepository.save(tenantData);
