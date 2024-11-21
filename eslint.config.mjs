@@ -14,6 +14,7 @@ export default tseslint.config(
       "*.spec.ts",
       "*/tests/**/*",
       "coverage/**",
+      ".github/**",
     ],
   },
   eslint.configs.recommended,
