@@ -1,5 +1,4 @@
-import { NextFunction } from "express";
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 import { TenantService } from "../services/TenantService";
 import { TenantRequest } from "../types";
 import { Logger } from "winston";
@@ -7,8 +6,8 @@ import { validationResult } from "express-validator";
 
 export class TenantController {
   constructor(
-    private tenantService: TenantService,
-    private logger: Logger,
+    readonly tenantService: TenantService,
+    readonly logger: Logger,
   ) {}
 
   async create(req: TenantRequest, res: Response, next: NextFunction) {

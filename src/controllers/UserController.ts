@@ -6,7 +6,7 @@ import createHttpError from "http-errors";
 import { validationResult } from "express-validator";
 
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(readonly userService: UserService) {}
 
   async create(req: CreateUserRequest, res: Response, next: NextFunction) {
     const { firstName, lastName, email, password, tenantId, role } = req.body;
