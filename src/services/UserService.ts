@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { UserData } from "../types";
 import { User } from "./../entity/User";
 import createHttpError from "http-errors";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export class UserService {
   constructor(readonly userRepository: Repository<User>) {}
