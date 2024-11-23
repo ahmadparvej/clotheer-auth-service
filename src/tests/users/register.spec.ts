@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 import app from "./../../app";
 import { AppDataSource } from "./../../config/data-source";
 import { Roles } from "./../../constants/index";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { isJwt } from "../utils";
 import { RefreshToken } from "./../../entity/RefreshToken";
 
