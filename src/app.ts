@@ -6,8 +6,16 @@ import authRouter from "./routes/auth";
 import cookieParser from "cookie-parser";
 import tenantsRouter from "./routes/tenants";
 import userRouter from "./routes/user";
+import cors from "cors";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5174",
+    credentials: true,
+  }),
+);
 app.use(express.static("public"));
 app.use(cookieParser());
 app.use(express.json());
