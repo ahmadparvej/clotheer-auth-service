@@ -35,7 +35,18 @@ describe("Post /users", () => {
   }, 10000);
 
   describe("Given all fields", () => {
-    it("should persist user in database", async () => {
+    it("should persist user in database with role MANAGER", async () => {
+      //create tenant
+      const tenant = {
+        name: "Tenant 1",
+        address: "Address 1",
+      };
+
+      await request(app)
+        .post("/tenants")
+        .send(tenant)
+        .set("Cookie", [`access_token=${adminToken};`]);
+
       //Act
 
       const userData = {
@@ -54,27 +65,6 @@ describe("Post /users", () => {
         .send(userData);
 
       // Assert
-      const userRepository = connection.getRepository(User);
-      const users = await userRepository.find();
-      expect(response.statusCode).toBe(201);
-      expect(users).toHaveLength(1);
-    });
-
-    it("should create a manager user", async () => {
-      const userData = {
-        firstName: "John",
-        lastName: "Doe",
-        email: "b8x0n@example.com",
-        password: "password",
-        tenantId: tenantData.id,
-        role: Roles.MANAGER,
-      };
-
-      const response = await request(app)
-        .post("/users")
-        .set("Cookie", [`access_token=${adminToken};`])
-        .send(userData);
-
       const userRepository = connection.getRepository(User);
       const users = await userRepository.find();
       expect(response.statusCode).toBe(201);
