@@ -26,17 +26,14 @@ export class UserService {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const payload: UserData = {
+    const payload = {
       firstName,
       lastName,
       email,
       password: hashedPassword,
       role,
+      tenant: tenantId ? { id: tenantId } : undefined,
     };
-
-    if (tenantId) {
-      payload["tenantId"] = tenantId;
-    }
 
     // Save user to database
     try {
@@ -67,6 +64,9 @@ export class UserService {
   async findById(id: number) {
     return await this.userRepository.findOne({
       where: { id },
+      relations: {
+        tenant: true,
+      },
     });
   }
 

@@ -36,7 +36,18 @@ describe("PUT /users", () => {
 
   describe("Given all fields", () => {
     it("should update user by id", async () => {
-      //Arrange
+      //create tenant
+      const tenant = {
+        name: "Tenant 1",
+        address: "Address 1",
+      };
+
+      await request(app)
+        .post("/tenants")
+        .send(tenant)
+        .set("Cookie", [`access_token=${adminToken};`]);
+
+      //create a manager user with tenant
       const userData1 = {
         firstName: "John",
         lastName: "Doe",
