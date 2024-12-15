@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { UserData } from "../types";
+import { UserData, UserQueryParams } from "../types";
 import { User } from "./../entity/User";
 import createHttpError from "http-errors";
 import bcrypt from "bcryptjs";
@@ -70,8 +70,11 @@ export class UserService {
     });
   }
 
-  async getAll() {
-    return await this.userRepository.find();
+  async getAll(validatedParams: UserQueryParams) {
+    const { page, limit } = validatedParams;
+    const queryBuilder = this.userRepository.createQueryBuilder();
+    const result = queryBuilder.skip((page - 1) * limit).take(limit);
+    return await result.getManyAndCount();
   }
 
   async delete(id: number) {

@@ -1,4 +1,9 @@
-import express, { RequestHandler } from "express";
+import express, {
+  NextFunction,
+  RequestHandler,
+  Request,
+  Response,
+} from "express";
 import { UserController } from "./../controllers/UserController";
 import authenticate from "../middlewares/authenticate";
 import { canAccess } from "./../middlewares/canAccess";
@@ -6,6 +11,7 @@ import { Roles } from "./../constants/index";
 import { UserService } from "./../services/UserService";
 import { AppDataSource } from "./../config/data-source";
 import { User } from "./../entity/User";
+import listUsersValidator from "../validators/list-users-validator";
 
 const userRouter = express.Router();
 
@@ -25,8 +31,10 @@ userRouter.post(
 userRouter.get(
   "/",
   authenticate as RequestHandler,
+  listUsersValidator,
   canAccess([Roles.ADMIN]),
-  (req, res, next) => userController.getAll(req, res, next),
+  (req: Request, res: Response, next: NextFunction) =>
+    userController.getAll(req, res, next),
 );
 
 userRouter.get(
