@@ -1,9 +1,9 @@
 import { NextFunction, Response } from "express";
-import { CreateUserRequest } from "../types";
+import { CreateUserRequest, UserQueryParams } from "../types";
 import { UserService } from "./../services/UserService";
 import { Roles } from "./../constants/index";
 import createHttpError from "http-errors";
-import { validationResult } from "express-validator";
+import { matchedData, validationResult } from "express-validator";
 
 export class UserController {
   constructor(readonly userService: UserService) {}
@@ -33,9 +33,18 @@ export class UserController {
   }
 
   async getAll(req: CreateUserRequest, res: Response, next: NextFunction) {
+    const validatedParams: UserQueryParams = matchedData(req, {
+      onlyValidData: true,
+    });
+
     try {
-      const users = await this.userService.getAll();
-      res.status(200).json(users);
+      const [users, count] = await this.userService.getAll(validatedParams);
+      res.status(200).json({
+        total: count,
+        page: validatedParams.page,
+        limit: validatedParams.limit,
+        data: users,
+      });
     } catch (error) {
       next(error);
     }

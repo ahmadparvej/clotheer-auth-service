@@ -49,3 +49,8 @@ export interface ITenant {
   address: string;
   id?: number;
 }
+
+export interface UserQueryParams {
+  page: number;
+  limit: number;
+}
