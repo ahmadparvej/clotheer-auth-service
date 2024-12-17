@@ -18,6 +18,22 @@ export default checkSchema(
         },
       },
     },
+    q: {
+      trim: true,
+      customSanitizer: {
+        options: (value: string) => {
+          return value ? value : "";
+        },
+      },
+    },
+    role: {
+      trim: true,
+      customSanitizer: {
+        options: (value: string) => {
+          return value ? value : "";
+        },
+      },
+    },
   },
   ["query"],
 );

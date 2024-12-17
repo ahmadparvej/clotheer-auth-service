@@ -53,4 +53,6 @@ export interface ITenant {
 export interface UserQueryParams {
   page: number;
   limit: number;
+  q: string;
+  role: string;
 }
