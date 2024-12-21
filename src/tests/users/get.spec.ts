@@ -109,43 +109,44 @@ describe("GET /users", () => {
       expect(response.body.limit).toBe(6);
     });
 
-    // it("should return user by id", async () => {
+    it("should return all users with search term and role", async () => {
+      //create tenant
+      const tenant = {
+        name: "Tenant 1",
+        address: "Address 1",
+      };
 
-    //   //create tenant
-    //   const tenant = {
-    //     name: "Tenant 1",
-    //     address: "Address 1",
-    //   };
+      await request(app)
+        .post("/tenants")
+        .send(tenant)
+        .set("Cookie", [`access_token=${adminToken};`]);
 
-    //   await request(app)
-    //     .post("/tenants")
-    //     .send(tenant)
-    //     .set("Cookie", [`access_token=${adminToken};`]);
+      //Arrange
+      const userData1 = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "b8x0n@example.com",
+        password: "password",
+        tenantId: 1,
+        role: Roles.MANAGER,
+      };
 
-    //   //Arrange
-    //   const userData1 = {
-    //     firstName: "John",
-    //     lastName: "Doe",
-    //     email: "b8x0n@example.com",
-    //     password: "password",
-    //     tenantId: tenantData.id,
-    //     role: Roles.MANAGER,
-    //   };
+      await request(app)
+        .post("/users")
+        .set("Cookie", [`access_token=${adminToken};`])
+        .send(userData1);
 
-    //   await request(app)
-    //     .post("/users")
-    //     .set("Cookie", [`access_token=${adminToken};`])
-    //     .send(userData1);
+      //Act
+      const response = await request(app)
+        .get("/users?page=1&limit=6&q=John&role=manager")
+        .set("Cookie", [`access_token=${adminToken};`]);
 
-    //   //Act
-    //   const response = await request(app)
-    //     .get("/users/1")
-    //     .set("Cookie", [`access_token=${managerToken};`]);
-
-    //   //Assert
-    //   expect(response.statusCode).toBe(200);
-    //   console.log("response: ",response.body)
-    //   expect((response.body as Record<string, string>).id).toBe(1);
-    // });
+      // Assert
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data.length).toBe(1);
+      expect(response.body.total).toBe(1);
+      expect(response.body.page).toBe(1);
+      expect(response.body.limit).toBe(6);
+    });
   });
 });

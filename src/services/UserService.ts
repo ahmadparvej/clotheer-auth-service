@@ -1,8 +1,8 @@
+import bcrypt from "bcryptjs";
+import createHttpError from "http-errors";
 import { Brackets, Repository } from "typeorm";
 import { UserData, UserQueryParams } from "../types";
 import { User } from "./../entity/User";
-import createHttpError from "http-errors";
-import bcrypt from "bcryptjs";
 
 export class UserService {
   constructor(readonly userRepository: Repository<User>) {}
@@ -36,12 +36,7 @@ export class UserService {
     };
 
     // Save user to database
-    try {
-      return await this.userRepository.save(payload);
-    } catch {
-      const error = createHttpError(500, "failed to create user in database");
-      throw error;
-    }
+    return await this.userRepository.save(payload);
   }
 
   async login({ email, password }: { email: string; password: string }) {
