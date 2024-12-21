@@ -22,7 +22,6 @@ describe("GET /users", () => {
   beforeEach(async () => {
     jwks.start();
     adminToken = jwks.token({ sub: "1", role: Roles.ADMIN });
-    tenantData = await createTenant(connection.getRepository(Tenant));
     // database truncate
     await connection.dropDatabase();
     await connection.synchronize();
@@ -34,7 +33,43 @@ describe("GET /users", () => {
   }, 10000);
 
   describe("Given all fields", () => {
-    it("should return a list of users", async () => {
+    it("should return all users without search term or role", async () => {
+      //create tenant
+      const tenant = { name: "Tenant 1" };
+      tenantData = await createTenant(connection.getRepository(Tenant));
+
+      //Arrange
+      const userData1 = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "b8x0n@example.com",
+        password: "password",
+        tenantId: 1,
+        role: Roles.MANAGER,
+      };
+
+      const create_user_response = await request(app)
+        .post("/users")
+        .set("Cookie", [`access_token=${adminToken};`])
+        .send(userData1);
+
+      expect(create_user_response.statusCode).toBe(201);
+      expect(create_user_response.body).toHaveProperty("id");
+
+      //Act
+      const response = await request(app)
+        .get("/users")
+        .set("Cookie", [`access_token=${adminToken};`]);
+
+      // Assert
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data.length).toBe(1);
+      expect(response.body.total).toBe(1);
+      expect(response.body.page).toBe(1);
+      expect(response.body.limit).toBe(6);
+    });
+
+    it("should return all users with search term", async () => {
       //create tenant
       const tenant = {
         name: "Tenant 1",
@@ -52,7 +87,7 @@ describe("GET /users", () => {
         lastName: "Doe",
         email: "b8x0n@example.com",
         password: "password",
-        tenantId: tenantData.id,
+        tenantId: 1,
         role: Roles.MANAGER,
       };
 
@@ -61,40 +96,17 @@ describe("GET /users", () => {
         .set("Cookie", [`access_token=${adminToken};`])
         .send(userData1);
 
-      //create tenant
-      const tenant2 = {
-        name: "Tenant 2",
-        address: "Address 2",
-      };
-
-      await request(app)
-        .post("/tenants")
-        .send(tenant2)
-        .set("Cookie", [`access_token=${adminToken};`]);
-
-      //create second user
-      const userData2 = {
-        firstName: "Parvej",
-        lastName: "Ahmad",
-        email: "parvej@example.com",
-        password: "password",
-        tenantId: 2,
-        role: Roles.MANAGER,
-      };
-
-      await request(app)
-        .post("/users")
-        .set("Cookie", [`access_token=${adminToken};`])
-        .send(userData2);
-
       //Act
       const response = await request(app)
-        .get("/users")
+        .get("/users?page=1&limit=6&q=John")
         .set("Cookie", [`access_token=${adminToken};`]);
 
       // Assert
       expect(response.statusCode).toBe(200);
-      expect(response.body.data).toHaveLength(2);
+      expect(response.body.data.length).toBe(1);
+      expect(response.body.total).toBe(1);
+      expect(response.body.page).toBe(1);
+      expect(response.body.limit).toBe(6);
     });
 
     // it("should return user by id", async () => {
