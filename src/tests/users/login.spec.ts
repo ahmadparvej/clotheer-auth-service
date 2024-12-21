@@ -97,6 +97,20 @@ describe("POST /auth/login", () => {
       expect(user).toHaveProperty("id");
     });
 
+    it("should show error if user does not exist", async () => {
+      const loginCredentials = {
+        email: "b8x0n@example.com",
+        password: "password",
+      };
+
+      const response = await request(app)
+        .post("/auth/login")
+        .send(loginCredentials);
+
+      //Assert
+      expect(response.statusCode).toBe(401);
+    });
+
     it("should check if password is incorrect", async () => {
       //Arrange
       const userData = {

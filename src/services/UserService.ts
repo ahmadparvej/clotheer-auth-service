@@ -1,8 +1,8 @@
-import { Repository } from "typeorm";
+import bcrypt from "bcryptjs";
+import createHttpError from "http-errors";
+import { Brackets, Repository } from "typeorm";
 import { UserData, UserQueryParams } from "../types";
 import { User } from "./../entity/User";
-import createHttpError from "http-errors";
-import bcrypt from "bcryptjs";
 
 export class UserService {
   constructor(readonly userRepository: Repository<User>) {}
@@ -36,12 +36,7 @@ export class UserService {
     };
 
     // Save user to database
-    try {
-      return await this.userRepository.save(payload);
-    } catch {
-      const error = createHttpError(500, "failed to create user in database");
-      throw error;
-    }
+    return await this.userRepository.save(payload);
   }
 
   async login({ email, password }: { email: string; password: string }) {
@@ -72,8 +67,31 @@ export class UserService {
 
   async getAll(validatedParams: UserQueryParams) {
     const { page, limit } = validatedParams;
-    const queryBuilder = this.userRepository.createQueryBuilder();
-    const result = queryBuilder.skip((page - 1) * limit).take(limit);
+    const queryBuilder = this.userRepository.createQueryBuilder("user");
+
+    if (validatedParams.q) {
+      const searchTerm = `%${validatedParams.q}%`;
+
+      queryBuilder.where(
+        new Brackets((qb) => {
+          qb.where("CONCAT(user.firstName, ' ', user.lastName) ILike :q", {
+            q: searchTerm,
+          }).orWhere("user.email ILike :q", { q: searchTerm });
+        }),
+      );
+    }
+
+    if (validatedParams.role) {
+      queryBuilder.andWhere("user.role = :role", {
+        role: validatedParams.role,
+      });
+    }
+
+    const result = queryBuilder
+      .leftJoinAndSelect("user.tenant", "tenant")
+      .skip((page - 1) * limit)
+      .take(limit)
+      .orderBy("user.id", "DESC");
     return await result.getManyAndCount();
   }
 
